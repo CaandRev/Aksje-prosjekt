@@ -112,3 +112,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+ansatt.csv
+Utgått/akjseregister.py
+WIP/
+Ansatt.xlsx
