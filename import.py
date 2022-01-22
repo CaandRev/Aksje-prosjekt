@@ -25,14 +25,14 @@ lst=[]
 
 with open('ansatte.csv', 'r', newline='', encoding= 'utf-8-sig') as ansatt_lst, open('scrape_lst.csv', 'r', newline='', encoding= 'utf-8-sig') as scrape_lst:
     ansatt_lst = csv.reader(ansatt_lst)
-    scrp_lst = csv.reader(scrape_lst) 
+    scrape_lst = csv.reader(scrape_lst) 
     ansatt_lst = list(ansatt_lst)
-    scrp_lst = list(scrp_lst)
+    scrape_lst = list(scrape_lst)
     
     for writes in ansatt_lst:
         name = str(writes[1]+' '+writes[2]).upper()
         
-        for reads in scrp_lst:
+        for reads in scrape_lst:
             comp = fuzz.token_sort_ratio(reads[0], name)
             if reads[0] == '':
                 continue
@@ -61,7 +61,7 @@ with open('ansatte.csv', 'r', newline='', encoding= 'utf-8-sig') as ansatt_lst, 
 
 
 with open('newfile.csv', 'w', newline ='', encoding='utf-8-sig') as fhand:    
-    f= csv.ansatt_lst(fhand)
+    f= csv.writer(fhand)
    
     newlst=[['Ansattnr','Etternavn','Fornavn','E-Post','Avdeling','Gruppe','Kontor','Inntektskategori','Utdannet år','Stillingsprosent','Type','Startet','Sluttet','Tjenestetid', header[0],header[1],header[0],header[1],header[0],header[1],header[0],header[1],header[0],header[1],header[0],header[1],header[0],header[1],header[0],header[1],header[0],header[1],header[0],header[1],header[0],header[1],header[0],header[1],header[0],header[1],header[0],header[1]]]
     for i in newans:            
@@ -90,7 +90,8 @@ with open('newfile.csv', 'r', newline='', encoding='utf-8-sig') as f:
             lst.append(i)
        
 with open('resultat.csv', 'w', newline='', encoding='utf-8-sig') as f:
-    fhand = csv.ansatt_lst(f)   
+    fhand = csv.writer(f)   
     fhand.writerows(lst)
-    
+delpath = cwd+'\\newfile.csv'
+os.remove(delpath)
 stoptime = runtime.stoptime(starttime) 
