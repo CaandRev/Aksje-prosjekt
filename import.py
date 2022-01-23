@@ -14,6 +14,18 @@ new=[]
 count = 0
 newlst=[]
 lst=[]
+
+# Definer funksjon til å sjekke aksjetype
+def checknumb(num_to_check):
+    checknumb= int(num_to_check)
+    quot,rem=divmod(int(checknumb),10)
+    if checknumb > 412:
+        new.append('A')
+    elif checknumb<410 and rem==0:
+        new.append('A')
+    else:
+        new.append('B')
+
 # Definer funksjon til å s skrive til den nye liste
 
 with open('ansatte.csv', 'r', newline='', encoding= 'utf-8-sig') as ansat_lst, open('scrape_lst.csv', 'r', newline='', encoding= 'utf-8-sig') as scrape_lst:
@@ -24,8 +36,6 @@ with open('ansatte.csv', 'r', newline='', encoding= 'utf-8-sig') as ansat_lst, o
     
     for ansat in ansat_lst:
         name = str(ansat[1]+' '+ansat[2]).upper()
-        
-        
         for scrape in scrape_lst:
             comp = fuzz.token_sort_ratio(scrape[0], name)
             if scrape[0] == '':
@@ -34,14 +44,7 @@ with open('ansatte.csv', 'r', newline='', encoding= 'utf-8-sig') as ansat_lst, o
                 new.extend(ansat)
                 new.extend(scrape[4:6])
                 # Sjekk for a eller b aksje
-                checknumb= int(scrape[5])
-                quot,rem=divmod(int(checknumb),10)
-                if checknumb > 412:
-                    new.append('A')
-                elif checknumb<410 and rem==0:
-                    new.append('A')
-                else:
-                    new.append('B')
+                checknumb(scrape[5])
             
             elif 78 < comp < 100 :
                 x = scrape[0]
@@ -57,8 +60,7 @@ with open('ansatte.csv', 'r', newline='', encoding= 'utf-8-sig') as ansat_lst, o
                         new.extend(ansat)
                         new.extend(scrape[4:6])
                         # Sjekk for a eller b aksje
-                        if scrape[5] !=None:
-                            new.append('B')
+                        checknumb(scrape[5])
                         
 with open('resultat_long.csv', 'w', newline ='', encoding='utf-8-sig') as fhand:    
     f= csv.writer(fhand)   
