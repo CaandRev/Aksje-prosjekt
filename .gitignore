@@ -112,6 +112,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Files and foldes that are in the folde but should't be uploaded now
 ansatt.csv
 Utgått/akjseregister.py
 WIP/
