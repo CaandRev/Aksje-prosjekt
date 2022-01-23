@@ -1,26 +1,19 @@
 import csv, os, runtime
-# from bs4.element import ProcessingInstruction
 from fuzzywuzzy import fuzz
-# from fuzzywuzzy import process
 
 starttime=runtime.starttime()
 cwd = os.getcwd()
 
-# thisyear=datetime.datetime.now().year
-# years=range(2015,thisyear+1,1)
 header = ['År','Antall']
 print(cwd)
 
 # Vurder at lave et sjekk om fil eksistere
 
-names = []
-employes = []
 newans=[]
 count = 0
-compcount = 0
-con=1
 newlst=[]
 lst=[]
+ 
 # Definer funksjon til å s skrive til den nye liste
 
 with open('ansatte.csv', 'r', newline='', encoding= 'utf-8-sig') as ansatt_lst, open('scrape_lst.csv', 'r', newline='', encoding= 'utf-8-sig') as scrape_lst:
@@ -29,21 +22,19 @@ with open('ansatte.csv', 'r', newline='', encoding= 'utf-8-sig') as ansatt_lst, 
     ansatt_lst = list(ansatt_lst)
     scrape_lst = list(scrape_lst)
     
-    for writes in ansatt_lst:
-        name = str(writes[1]+' '+writes[2]).upper()
+    for ansatt in ansatt_lst:
+        name = str(ansatt[1]+' '+ansatt[2]).upper()
         
-        for reads in scrape_lst:
-            comp = fuzz.token_sort_ratio(reads[0], name)
-            if reads[0] == '':
+        for scrape in scrape_lst:
+            comp = fuzz.token_sort_ratio(scrape[0], name)
+            if scrape[0] == '':
                 continue
             if comp == 100:
-                # print('Der er et match yeahh!!! Navnet er: ',reads[0], ' ; ', name,'%.1f' % comp,'\n')
-                newans.append(writes)
-                newans[count].extend(reads[4:6])
-                newname = name = str(writes[1]+' '+writes[2]).upper()
+                newans.append(ansatt)
+                newans[count].extend(scrape[4:6])
                 count += 1
             elif 78 < comp < 100 :
-                x = reads[0]
+                x = scrape[0]
                 x = x.split()
                 y = name.split()
                 lenght = min(len(x),len(y))
@@ -53,10 +44,9 @@ with open('ansatte.csv', 'r', newline='', encoding= 'utf-8-sig') as ansatt_lst, 
                     if x[n].upper() in y[n].upper():
                         namecount = namecount + 1
                     if namecount/lenght == 1:
-                        # print('Der er et match yeahh!!! Navnet er: ',reads[0], ' ; ', name,'%.1f' % comp,'\n')
-                        newans.append(writes)
-                        newans[count].extend(reads[4:6])
-                        newname = name = str(writes[1]+' '+writes[2]).upper()
+                        # print('Der er et match yeahh!!! Navnet er: ',scrape[0], ' ; ', name,'%.1f' % comp,'\n')
+                        newans.append(ansatt)
+                        newans[count].extend(scrape[4:6])
                         count+=1
 
 
