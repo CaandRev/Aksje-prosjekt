@@ -1,100 +1,72 @@
-# Dette er en test av git hub
-
 import csv, os, runtime
-# from bs4.element import ProcessingInstruction
 from fuzzywuzzy import fuzz
-# from fuzzywuzzy import process
 
 starttime=runtime.starttime()
-os.chdir('C:\\Users\\caspe\\OneDrive\\Prog\\Aksje prosjekt\\WIP')
+# os.chdir('C:\\Users\\caspe\\OneDrive\\Prog\\Aksje prosjekt\\WIP')
 cwd = os.getcwd()
 
-# thisyear=datetime.datetime.now().year
-# years=range(2015,thisyear+1,1)
-header = ['År','Antall']
+header = ['År','Antall','Type']
 print(cwd)
 
 # Vurder at lave et sjekk om fil eksistere
 
-names = []
-employes = []
-newans=[]
+new=[]
 count = 0
-compcount = 0
-con=1
 newlst=[]
 lst=[]
 # Definer funksjon til å s skrive til den nye liste
 
-with open('ansatt_justert.csv', 'r', newline='', encoding= 'utf-8-sig') as filewrite, open('lst.csv', 'r', newline='', encoding= 'utf-8-sig') as fileread:
-    writer = csv.reader(filewrite)
-    reader = csv.reader(fileread) 
-    writer = list(writer)
-    reader = list(reader)
+with open('ansatte.csv', 'r', newline='', encoding= 'utf-8-sig') as ansat_lst, open('scrape_lst.csv', 'r', newline='', encoding= 'utf-8-sig') as scrape_lst:
+    ansat_lst = csv.reader(ansat_lst)
+    scrape_lst = csv.reader(scrape_lst) 
+    ansat_lst = list(ansat_lst)
+    scrape_lst = list(scrape_lst)
     
-    for writes in writer:
-        name = str(writes[1]+' '+writes[2]).upper()
+    for ansat in ansat_lst:
+        name = str(ansat[1]+' '+ansat[2]).upper()
         
-        for reads in reader:
-            comp = fuzz.token_sort_ratio(reads[0], name)
-            if reads[0] == '':
+        
+        for scrape in scrape_lst:
+            comp = fuzz.token_sort_ratio(scrape[0], name)
+            if scrape[0] == '':
                 continue
             if comp == 100:
-                # print('Der er et match yeahh!!! Navnet er: ',reads[0], ' ; ', name,'%.1f' % comp,'\\n')
-                newans.append(writes)
-                newans[count].extend(reads[4:6])
-                newname = name = str(writes[1]+' '+writes[2]).upper()
-                count += 1
+                new.extend(ansat)
+                new.extend(scrape[4:6])
+                # Sjekk for a eller b aksje
+                checknumb= int(scrape[5])
+                quot,rem=divmod(int(checknumb),10)
+                if checknumb > 412:
+                    new.append('A')
+                elif checknumb<410 and rem==0:
+                    new.append('A')
+                else:
+                    new.append('B')
+            
             elif 78 < comp < 100 :
-                x = reads[0]
+                x = scrape[0]
                 x = x.split()
                 y = name.split()
                 lenght = min(len(x),len(y))
                 namecount = 0
                 for n in range(lenght):
-                    
                     if x[n].upper() in y[n].upper():
                         namecount += 1
                     if namecount/lenght == 1:
-                        # print('Der er et match yeahh!!! Navnet er: ',reads[0], ' ; ', name,'%.1f' % comp,'\\n')
-                        newans.append(writes)
-                        newans[count].extend(reads[4:6])
-                        newname = name = str(writes[1]+' '+writes[2]).upper()
-                        count+=1
-
-
-with open('newfile.csv', 'w', newline ='', encoding='utf-8-sig') as fhand:    
-    f= csv.writer(fhand)
-   
-    newlst=[['Ansattnr','Etternavn','Fornavn','E-Post','Avdeling','Gruppe','Kontor','Inntektskategori','Utdannet år','Stillingsprosent','Type','Startet','Sluttet','Tjenestetid', 'År','Antal','Type aksje']]
-    for i in newans:            
-        if i not in newlst:
-            newlst.append(i)
-    
-    f.writerows(newlst)
-
-# Bør utgår i tilfelle det blir en lang liste
-# with open('newfile.csv', 'r', newline='', encoding='utf-8-sig') as f:
-#     count = 0
-#     fhand = csv.reader(f)
-#     for i in fhand:
-#         count+=1
-#         lenght=len(i)
-            
-#         if lenght < 42:
-#             item = i[14:lenght+1]
-#             del i[14:lenght+1]
-#             for j in range(42-lenght):
-#                 i.append('N/A')
-#             for j in item:
-#                 i.append(j)
-#             lst.append(i)
-#             # print(i,len(i))
-#         else:
-#             lst.append(i)
-       
-with open('resultatlong.csv', 'w', newline='', encoding='utf-8-sig') as f:
-    fhand = csv.writer(f)   
-    fhand.writerows(lst)
-    
+                        # print('Der er et match yeahh!!! Navnet er: ',scrape[0], ' ; ', name,'%.1f' % comp,'\\n')
+                        new.extend(ansat)
+                        new.extend(scrape[4:6])
+                        # Sjekk for a eller b aksje
+                        if scrape[5] !=None:
+                            new.append('B')
+                        
+with open('resultat_long.csv', 'w', newline ='', encoding='utf-8-sig') as fhand:    
+    f= csv.writer(fhand)   
+    header=['Ansattnr','Etternavn','Fornavn','E-Post','Avdeling','Gruppe','Kontor','Inntektskategori','Utdannet år','Stillingsprosent','Type','Startet','Sluttet','Tjenestetid', 'År','Antal','Type aksje']
+    header.reverse()
+    for i in header:
+        new.insert(0,i)
+    for i in range(0,len(new),17):            
+        f.writerow(new[i:i+17])
+         
 stoptime = runtime.stoptime(starttime) 
