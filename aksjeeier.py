@@ -10,10 +10,10 @@ ctx.verify_mode=ssl.CERT_NONE
 
 #Definitions
 baseurl="https://www.aksjeeiere.no/"
-url = "https://www.aksjeeiere.no/?utf8=%E2%9C%93&year=2014&q=Norconsult+holding+AS"
+url = "https://www.aksjeeiere.no/?utf8=%E2%9C%93&year=2021&q=Norconsult+holding+AS"
 htmllst=[]
 thisyear=datetime.datetime.now().year
-years=range(2015,thisyear+1,1)
+years=range(2021,thisyear+1,1)
 count=0
 
 # Promter bruker for filnavn og undersøker om den eksistere og giver mulighed for å stoppe
@@ -53,7 +53,7 @@ for year in years:
     url = "https://www.aksjeeiere.no/?utf8=%E2%9C%93&year=" + str(year) + "&q=Norconsult+holding+AS"
 
 #Prints list to csv in chunks
-with open(filename + '.csv', "w", newline ='', encoding='utf-8-sig') as fhand:
+with open(filename + '.csv', "a", newline ='', encoding='utf-8-sig') as fhand:
     writer = csv.writer(fhand)
     for i in range(0,len(htmllst),7):
         writer.writerow(htmllst[i:i+7])
